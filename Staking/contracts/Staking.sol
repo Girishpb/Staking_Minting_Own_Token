@@ -54,7 +54,7 @@ contract Staking{
     }
 
     function calculateInterest(uint basisPoints, uint numDays, uint weiAmount) private pure returns(uint){
-        return basisPoints/10000 * weiAmount;
+        return basisPoints * weiAmount /10000;
     }
 
     function modifyLockerPeriods(uint numDays, uint basisPoints) external {

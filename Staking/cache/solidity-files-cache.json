@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "C:\\Users\\dell\\Desktop\\Redsoftwre\\Staking\\contracts\\Staking.sol": {
-      "lastModificationDate": 1685362892129,
-      "contentHash": "5975f12c9f8fce41f1457e6330311c22",
+      "lastModificationDate": 1685373020824,
+      "contentHash": "ac8bc446a08b06bb4fccf058250e57eb",
       "sourceName": "contracts/Staking.sol",
       "solcConfig": {
         "version": "0.8.0",

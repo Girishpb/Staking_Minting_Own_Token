@@ -1,7 +1,7 @@
 const { expect } = require("chai");
 describe('Staking', function () {
     beforeEach(async function () {
-        [signer1, signers2] = await ethers.getSigners();
+        [signer1, signer2] = await ethers.getSigners();
         Staking = await ethers.getContractFactory('Staking', signer1);
         staking = await Staking.deploy({
             value: ethers.utils.parseEther('10')
@@ -45,5 +45,48 @@ describe('stakeEther', function () {
         ).to.equal(
             contractBalance.add(transferAmount))
     })
+    it('adds a position to positions', async function () {
+        const provider = waffle. provider;
+        let position;
+        const transferAmount = ethers. utils.parseEther('1.0')
+        position = await staking. positions (0)
+        expect (position. positionId). to. equal(0)
+        expect (position. walletAddress).to.equal('0x0000000000000000000000000000000000000000')
+        expect (position. createdDate). to. equal(0)
+        expect (position. unlockDate).to. equal(0)
+        expect (position. percentInterest). to.equal(0)
+        expect (position. weiStaked). to. equal(0)
+        expect (position. weiInterest).to.equal(0)
+        expect (position. open).to. equal(false)
+        expect(await staking.currentPositionId()).to.equal(0)
+
+         data = { value: transferAmount }
+         const transaction = await staking. connect (signer1).stakeEther(90, data);
+         const receipt = await transaction. wait()
+         const block = await provider.getBlock(receipt. blockNumber)
+         position = await staking.positions(0)
+
+         expect (position. positionId). to. equal(0)
+         expect (position. walletAddress).to.equal(signer1.address)
+         expect (position. createdDate). to. equal(block.timestamp)
+         expect (position. unlockDate).to. equal(block.timestamp+(86400 * 90 ))
+         expect (position. percentInterest). to.equal(1000)
+         expect (position. weiStaked). to. equal(transferAmount)
+         expect (position. weiInterest).to.equal(ethers.BigNumber.from(transferAmount).mul(1000).div(10000))
+         expect (position. open).to. equal(true)
+         expect(await staking.currentPositionId()).to.equal(1)
+     })
+
+     it('adds address amd positionId to positionIdsByAddress', async function ( ){
+   const transferAmount = ethers. utils.parseEther('0.5')
+   const data={ value: transferAmount }
+   await staking. connect(signer1).stakeEther(30, data)
+   await staking.connect (signer1).stakeEther(30, data)
+   await staking.connect(signer2) .stakeEther(90, data)
+   expect(await staking.positionIdsByAddress(signer1. address, 0)).to.equal(0)
+   expect(await staking.positionIdsByAddress(signer1. address, 1)).to. equal(1)
+   expect(await staking.positionIdsByAddress(signer2. address, 0)).to.equal(2)
+
+})
 })
 })
